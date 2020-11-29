@@ -2,6 +2,7 @@ package com.example.introtuce.Classes;
 
 public class User {
 
+    private String uid;
     private String firstname;
     private String gender;
     private String age;
@@ -11,6 +12,14 @@ public class User {
     private String country;
     private String hometown;
     private String phonenumber;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public String getFirstname() {
         return firstname;

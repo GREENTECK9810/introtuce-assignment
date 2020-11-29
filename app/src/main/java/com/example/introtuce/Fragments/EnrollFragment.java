@@ -70,6 +70,8 @@ public class EnrollFragment extends Fragment {
         if(validate()){
 
             final HashMap<String, Object> map = new HashMap<>();
+            final String uid = FirebaseDatabase.getInstance().getReference().child("Users").push().getKey();
+
             map.put("firstname", mFirstName.getText().toString());
             map.put("lastname", mLastName.getText().toString());
             map.put("age", mAge.getText().toString());
@@ -78,12 +80,14 @@ public class EnrollFragment extends Fragment {
             map.put("state", mState.getText().toString());
             map.put("hometown", mHomeTown.getText().toString());
             map.put("phonenumber", mPhoneNumber.getText().toString());
+            map.put("uid", uid);
 
-            final String uid = FirebaseDatabase.getInstance().getReference().child("Users").push().getKey();
 
             FirebaseDatabase.getInstance().getReference().child("Users").child(uid).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
+
+                    Toast.makeText(getActivity(), "User added successfully", Toast.LENGTH_LONG);
 
                     //upload profile photo if selected
                     if (imageUri != null){
@@ -107,7 +111,7 @@ public class EnrollFragment extends Fragment {
                                 map.clear();
                                 map.put("imageurl", imageUrl);
                                 FirebaseDatabase.getInstance().getReference().child("Users").child(uid).updateChildren(map);
-                                Toast.makeText(getActivity(), "User added successfully", Toast.LENGTH_SHORT);
+                                Toast.makeText(getActivity(), "User added successfully", Toast.LENGTH_LONG);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
