@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
-    List<User> mUsersList = new ArrayList<>();
+    List<User> mUsersList;
     Context mContext;
 
     public UserAdapter(List<User> usersList, Context context) {
@@ -35,18 +35,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        User user = new User();
-        user = mUsersList.get(position);
+        User user = mUsersList.get(position);
 
-        holder.name.setText(user.getName());
-        holder.details.setText(user.getGender() + " | " + user.getAge() + " | " + user.getCity());
-
-        holder.close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mUsersList.remove(position);
-            }
-        });
+        holder.name.setText(user.getFirstname());
+        holder.details.setText(user.getGender() + " | " + user.getAge() + " | " + user.getState());
     }
 
     @Override
@@ -56,14 +48,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private ImageView userImage, close;
+        private ImageView userImage, delete;
         private TextView name, details;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             userImage = itemView.findViewById(R.id.user_image);
-            close = itemView.findViewById(R.id.close);
+            delete = itemView.findViewById(R.id.delete);
             name = itemView.findViewById(R.id.name);
             details = itemView.findViewById(R.id.details);
 
