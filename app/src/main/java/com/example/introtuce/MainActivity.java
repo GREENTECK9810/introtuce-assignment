@@ -5,6 +5,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 
 import com.example.introtuce.Adapters.SectionPagerAdapter;
@@ -15,6 +17,7 @@ import com.google.android.material.tabs.TabLayout;
 public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     TabLayout tabLayout;
+    ImageView close;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.viewpager);
         tabLayout = findViewById(R.id.tablayout);
+        close = findViewById(R.id.close);
         
         setupViewPager();
         tabLayout.setupWithViewPager(viewPager);
@@ -43,10 +47,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        //closes the app
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                System.exit(0);
+            }
+        });
     }
 
 
-
+    //this method adds the fragments into the viewpager
     private void setupViewPager() {
 
         SectionPagerAdapter adapter = new SectionPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);

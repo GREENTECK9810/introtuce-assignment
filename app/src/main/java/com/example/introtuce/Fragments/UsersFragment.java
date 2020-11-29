@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.introtuce.Adapters.UserAdapter;
@@ -39,7 +40,7 @@ public class UsersFragment extends Fragment {
     RecyclerView recyclerView;
     UserAdapter userAdapter;
     List<User> users;
-    ImageView close;
+    ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,21 +49,13 @@ public class UsersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_users, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerview);
-        close = view.findViewById(R.id.close);
+        progressBar = view.findViewById(R.id.progress_circular);
         users = new ArrayList<>();
 
         userAdapter = new UserAdapter(users, getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         recyclerView.setAdapter(userAdapter);
         initList();
-
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().finish();
-                System.exit(0);
-            }
-        });
 
         userAdapter.setOnItemClickListener(new UserAdapter.onItemClickListener() {
             @Override
@@ -76,35 +69,44 @@ public class UsersFragment extends Fragment {
         return view;
     }
 
+    //this method removes the user from the database
     private void removeUser(String uid) {
         FirebaseDatabase.getInstance().getReference().child("Users").child(uid).removeValue()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(getActivity(), "Item removed", Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity(), "Item removed", Toast.LENGTH_SHORT).show();
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    //this method initialize the users list
     private void initList() {
+        progressBar.setVisibility(View.VISIBLE);
+
+        //this firebase method called whenever the value is changed in the database
         FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                progressBar.setVisibility(View.VISIBLE);
                 users.clear();
                 if (dataSnapshot.exists()){
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                         User user = snapshot.getValue(User.class);
                         users.add(user);
                     }
+                    //reverse the users list to display the last added user on the top of the recycler view
                     Collections.reverse(users);
                     userAdapter.notifyDataSetChanged();
                 }
+
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override

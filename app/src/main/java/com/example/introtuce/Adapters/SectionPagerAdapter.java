@@ -8,6 +8,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+
+// adapter to add fragments to viewpager
+
 public class SectionPagerAdapter extends FragmentPagerAdapter {
 
     List<Fragment> fragmentList = new ArrayList<>();

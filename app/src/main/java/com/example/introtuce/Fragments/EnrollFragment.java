@@ -32,6 +32,8 @@ import com.google.firebase.storage.StorageTask;
 
 import java.util.HashMap;
 
+// this fragments is responsible for enrollment of users
+
 public class EnrollFragment extends Fragment {
 
     private ImageView mUserImage;
@@ -65,11 +67,13 @@ public class EnrollFragment extends Fragment {
         return view;
     }
 
+    //method to add user to firebase database
     private void addUser() {
 
         if(validate()){
 
             final HashMap<String, Object> map = new HashMap<>();
+            //create new user id
             final String uid = FirebaseDatabase.getInstance().getReference().child("Users").push().getKey();
 
             map.put("firstname", mFirstName.getText().toString());
@@ -83,11 +87,10 @@ public class EnrollFragment extends Fragment {
             map.put("uid", uid);
 
 
+            //adding the values to child with userid uid under the branch Users
             FirebaseDatabase.getInstance().getReference().child("Users").child(uid).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-
-                    Toast.makeText(getActivity(), "User added successfully", Toast.LENGTH_LONG);
 
                     //upload profile photo if selected
                     if (imageUri != null){
@@ -111,16 +114,16 @@ public class EnrollFragment extends Fragment {
                                 map.clear();
                                 map.put("imageurl", imageUrl);
                                 FirebaseDatabase.getInstance().getReference().child("Users").child(uid).updateChildren(map);
-                                Toast.makeText(getActivity(), "User added successfully", Toast.LENGTH_LONG);
+                                Toast.makeText(getActivity(), "User added successfully", Toast.LENGTH_LONG).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT);
+                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }else {
-                        Toast.makeText(getActivity(), "User added successfully", Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity(), "User added successfully", Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -139,10 +142,12 @@ public class EnrollFragment extends Fragment {
 
     }
 
+    // returns selected image type
     private String getFileExtension(Uri uri) {
         return MimeTypeMap.getSingleton().getExtensionFromMimeType(getActivity().getContentResolver().getType(uri));
     }
 
+    // this method validates the value provided by user
     private boolean validate() {
         if (TextUtils.isEmpty(mFirstName.getText())){
             Toast.makeText(getActivity(), "First name is required", Toast.LENGTH_SHORT).show();
@@ -171,6 +176,7 @@ public class EnrollFragment extends Fragment {
         return true;
     }
 
+    //this method selects the image from the gallery
     private void selectImage() {
         Intent i = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
