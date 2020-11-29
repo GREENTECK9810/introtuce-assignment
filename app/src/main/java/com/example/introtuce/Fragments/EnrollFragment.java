@@ -44,5 +44,6 @@ public class EnrollFragment extends Fragment {
         mHomeTown = view.findViewById(R.id.hometown);
         mPhoneNumber = view.findViewById(R.id.phone_number);
         mState = view.findViewById(R.id.state);
+
     }
 }
